@@ -10,7 +10,6 @@ import Textbox from '../common/Textbox';
 import Button from '../common/Button';
 import GroupIcon from '../common/GroupIcon';
 import Row from '../common/Row';
-import LoadingIndicator from '../common/LoadingIndicator';
 
 class Login extends Component {
   state = {
@@ -23,7 +22,7 @@ class Login extends Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
-    this.setState({IsLoaded: false})
+    this.setState({ IsLoaded: false })
     const userDetails = {
       UserName: this.state.UserName,
       Password: this.state.Password
@@ -34,60 +33,56 @@ class Login extends Component {
         this.props.history.push('/dashboard');
       })
       .catch((err) => {
-        if(err.response !== undefined && err.response.status === 400)
+        if (err.response !== undefined && err.response.status === 400)
           toast(err.response.data.message);
         //else
-         // this.props.history.push('/Error');
+        // this.props.history.push('/Error');
       });
   }
 
   render() {
-    let loginScreen;
-    if(this.state.IsLoaded){
-      loginScreen = <div className="hold-transition login-page">
-      <div className="login-box">
-        <div className="login-logo">
-          <a href="/"><b>Rent</b>App</a>
-        </div>
-        <div className="card">
-          <div className="card-body login-card-body">
-            <p className="login-box-msg">Sign In</p>
-            <div className="input-group mb-3">
-              <Textbox typeName="email" 
-                       classValue="form-control"
-                       placeholderName= "Email"
-                       changed = {(event) => {
-                        this.setState({UserName : event.target.value})}} />
-              <GroupIcon iconValue={faEnvelope} />
-            </div>
-            <div className="input-group mb-3">
-              <Textbox typeName="password"
-                       classValue="form-control"
-                       placeholderName="Password"
-                       changed={(event) => {
-                        this.setState({Password : event.target.value})}}  />
-              <GroupIcon iconValue={faLock} />
-            </div>
-            <Row>
-              <div className="col-12">
-                <Button typeName="submit"
-                        classValue="btn btn-primary btn-block"
-                        click={this.handleSubmit}
-                        value="Sign In" />
-              </div>
-            </Row>
-          </div>
-        </div>
-      </div>
-    </div>
-    }
-    else{
-      loginScreen = <LoadingIndicator />
-    }
+
     return (
       <div>
         <ToastContainer />
-        {loginScreen}
+        <div className="hold-transition login-page">
+          <div className="login-box">
+            <div className="login-logo">
+              <a href="/"><b>Rent</b>App</a>
+            </div>
+            <div className="card">
+              <div className="card-body login-card-body">
+                <p className="login-box-msg">Sign In</p>
+                <div className="input-group mb-3">
+                  <Textbox typeName="email"
+                    classValue="form-control"
+                    placeholderName="Email"
+                    changed={(event) => {
+                      this.setState({ UserName: event.target.value })
+                    }} />
+                  <GroupIcon iconValue={faEnvelope} />
+                </div>
+                <div className="input-group mb-3">
+                  <Textbox typeName="password"
+                    classValue="form-control"
+                    placeholderName="Password"
+                    changed={(event) => {
+                      this.setState({ Password: event.target.value })
+                    }} />
+                  <GroupIcon iconValue={faLock} />
+                </div>
+                <Row>
+                  <div className="col-12">
+                    <Button typeName="submit"
+                      classValue="btn btn-primary btn-block"
+                      click={this.handleSubmit}
+                      value="Sign In" />
+                  </div>
+                </Row>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

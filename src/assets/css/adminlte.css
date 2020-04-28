@@ -1,4 +1,11 @@
-
+/*Custom Styles
+**************/
+.transparent-bg {
+  background-color: transparent;
+}
+.no-boder {
+  border: none;
+}
 @import url('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css');
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700');
 
@@ -4248,6 +4255,8 @@ input[type="button"].btn-block {
   padding-left: 0;
   margin-bottom: 0;
   list-style: none;
+  flex: 1;
+  align-items: flex-end;
 }
 
 .navbar-nav .nav-link {
