@@ -15,7 +15,8 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import TableHeader from "../common/TableHeader";
 import TableBody from "../common/TableBody";
 import { isAuthorized } from "../../utils";
-import LoadingIndicator from '../common/LoadingIndicator';
+import LoadingIndicator from "../common/LoadingIndicator";
+import Checkbox from "../common/Checkbox";
 
 class ManageUsers extends Component {
   constructor(props) {
@@ -36,7 +37,8 @@ class ManageUsers extends Component {
       headerDataViewData: "Users List",
       UserData: [],
       IsAdd: true,
-      IsLoaded: false
+      IsLoaded: false,
+      IsActive: true,
     };
   }
 
@@ -93,6 +95,7 @@ class ManageUsers extends Component {
           EmailId: this.state.EmailId,
           UserName: this.state.UserName,
           Password: this.state.Password,
+          IsActive: this.state.IsActive
         };
 
         await Axios.put(config.urls.USER_SERVICE + "updateUser", userDetails)
@@ -111,7 +114,8 @@ class ManageUsers extends Component {
                   UserName: "",
                   Password: "",
                   ConfirmPassword: "",
-                  IsAdd: true
+                  IsAdd: true,
+                  IsActive:true
                 });
                 this.getUsers();
               } else {
@@ -133,6 +137,7 @@ class ManageUsers extends Component {
           EmailId: this.state.EmailId,
           UserName: this.state.UserName,
           Password: this.state.Password,
+          IsActive: this.state.IsActive
         };
 
         await Axios.post(config.urls.USER_SERVICE + "saveUser", userDetails)
@@ -152,6 +157,7 @@ class ManageUsers extends Component {
                   Password: "",
                   ConfirmPassword: "",
                   IsAdd: true,
+                  IsActive: true
                 });
                 this.getUsers();
               } else {
@@ -190,6 +196,7 @@ class ManageUsers extends Component {
               UserName: res.data.UserName,
               Password: res.data.Password,
               ConfirmPassword: res.data.Password,
+              IsActive: res.data.IsActive,
               IsAddUser: true,
               UserButtonValue: "View User",
               IsAdd: false
@@ -208,7 +215,7 @@ class ManageUsers extends Component {
   onDeleteClickHandler = async (data) => {
     let isAuthorised = await isAuthorized();
     if (isAuthorised) {
-      debugger
+      debugger;
       await Axios.delete(
         config.urls.USER_SERVICE + "deleteUser?_id=" + data._id
       )
@@ -233,6 +240,7 @@ class ManageUsers extends Component {
                 Password: "",
                 ConfirmPassword: "",
                 IsAdd: true,
+                IsActive: true
               });
               this.getUsers();
               toast(res.data.message);
@@ -249,23 +257,32 @@ class ManageUsers extends Component {
     }
   };
 
+  IsActiveHandler = () => {
+    if (this.state.IsActive === true) {
+      this.setState({ IsActive: false });
+    } else {
+      this.setState({ IsActive: true });
+    }
+  };
+
   render() {
     let formAdd;
     let loadedValue;
-    if(this.state.IsLoaded){
-      loadedValue = <TableBody
-      tableData={this.state.userData}
-      tableValue="Manage User"
-      editClicked={(data) => {
-        this.onEditClickHandler(data);
-      }}
-      deleteClicked={(data) => {
-        this.onDeleteClickHandler(data);
-      }}
-    />
-    }
-    else{
-      loadedValue = <LoadingIndicator />
+    if (this.state.IsLoaded) {
+      loadedValue = (
+        <TableBody
+          tableData={this.state.userData}
+          tableValue="Manage User"
+          editClicked={(data) => {
+            this.onEditClickHandler(data);
+          }}
+          deleteClicked={(data) => {
+            this.onDeleteClickHandler(data);
+          }}
+        />
+      );
+    } else {
+      loadedValue = <LoadingIndicator />;
     }
 
     let headerValuesForGrid = ["Name", "Phone Number", "Email Id", "UserName"];
@@ -350,7 +367,19 @@ class ManageUsers extends Component {
               </div>
             </div>
             <div className="row">
-              <div className="col-md-12">
+              <div className="col-md-6">
+                <div className="form-group checkboxStyle">
+                <Checkbox
+                  idValue="isActive"
+                  value={this.state.IsActive}
+                  valueInCheck={this.state.IsActive}
+                  changeHandler={(data) => this.IsActiveHandler(this)}
+                  checkedValue={this.state.IsActive ? "checked" : ""}
+                  labelValue="Is Active"
+                />
+                </div>
+              </div>
+              <div className="col-md-6">
                 <div className="form-group">
                   <Label forValue="UserName" value="User Name" />
                   <Textbox

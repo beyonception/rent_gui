@@ -67,6 +67,7 @@ class DashBoard extends Component {
               "December",
             ];
             let TotalAmount = 0;
+            console.log(res.data);
             res.data.map((data) => {
               TotalAmount += data.TotalAmount
             })

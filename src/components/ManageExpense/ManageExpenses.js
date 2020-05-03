@@ -69,11 +69,13 @@ class ManageExpenses extends Component {
           if (res.data !== null || res.data !== undefined) {
             let organisedData = [];
             res.data.map((data) => {
-              organisedData.push({
-                id: data._id,
-                value: data.FirstName + " " + data.LastName,
-                checkedValue: false,
-              });
+              if (data.IsActive) {
+                organisedData.push({
+                  id: data._id,
+                  value: data.FirstName + " " + data.LastName,
+                  checkedValue: false,
+                });
+              }
             });
             this.setState({
               spentByUserData: organisedData,
@@ -189,10 +191,18 @@ class ManageExpenses extends Component {
     if (isAuthorised) {
       if (this.state.IsAdd) {
         let spentToValue = [];
-        if (this.state.userRightData.length > 0) {
-          this.state.userRightData.map((data) => {
-            spentToValue.push(data.id);
-          });
+        if (!this.state.isDefaultExpense) {
+          if (this.state.userRightData.length > 0) {
+            this.state.userRightData.map((data) => {
+              spentToValue.push(data.id);
+            });
+          }
+        } else {
+          if (this.state.userData.length > 0) {
+            this.state.userData.map((data) => {
+              spentToValue.push(data.id);
+            });
+          }
         }
         let expenseDetails = {
           spentBy: this.state.SpentBy,
@@ -234,10 +244,18 @@ class ManageExpenses extends Component {
           });
       } else {
         let spentToValue = [];
-        if (this.state.userRightData.length > 0) {
-          this.state.userRightData.map((data) => {
-            spentToValue.push(data.id);
-          });
+        if (!this.state.isDefaultExpense) {
+          if (this.state.userRightData.length > 0) {
+            this.state.userRightData.map((data) => {
+              spentToValue.push(data.id);
+            });
+          }
+        } else {
+          if (this.state.userData.length > 0) {
+            this.state.userData.map((data) => {
+              spentToValue.push(data.id);
+            });
+          }
         }
         let expenseDetails = {
           _id: this.state._id,
@@ -266,7 +284,7 @@ class ManageExpenses extends Component {
                   IsAddUser: false,
                   UserButtonValue: "Add User",
                   IsAdd: true,
-                  _id: ""
+                  _id: "",
                 });
                 toast("Expense updated successfully");
               } else {
@@ -404,7 +422,7 @@ class ManageExpenses extends Component {
         IsAddUser: true,
         UserButtonValue: "View Expense",
         IsAdd: true,
-        _id: ""
+        _id: "",
       });
       this.getUsers();
     } else {
